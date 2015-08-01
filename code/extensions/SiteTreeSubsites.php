@@ -168,7 +168,7 @@ class SiteTreeSubsites extends DataExtension {
 	 * this means we can subclass this easier and do more complex
 	 * relation duplication.
 	 */
-	protected function duplicateToSubsitePrep($subsiteID) {
+	public function duplicateToSubsitePrep($subsiteID) {
 		if (is_object($subsiteID)) {
 			$subsiteID = $subsiteID->ID;
 		}
@@ -180,13 +180,13 @@ class SiteTreeSubsites extends DataExtension {
 			$subsiteID = $oldSubsite;
 		}
 		// doesn't write as we need to reset the SubsiteID, ParentID etc
-		$clone = $this->duplicate(false);
+		$clone = $this->owner->duplicate(false);
 		$clone->CheckedPublicationDifferences = $clone->AddedToStage = true;
 		$subsiteID = ($subsiteID ? $subsiteID : $oldSubsite);
 		$clone->SubsiteID = $subsiteID;
 		// We have no idea what the parentID should be, so as a workaround use the url-segment and subsite ID
-		if ($this->Parent()) {
-			$parentSeg = $this->Parent()->URLSegment;
+		if ($this->owner->Parent()) {
+			$parentSeg = $this->owner->Parent()->URLSegment;
 			$newParentPage = Page::get()->filter('URLSegment', $parentSeg)->first();
 			if ($newParentPage) {
 				$clone->ParentID = $newParentPage->ID;
